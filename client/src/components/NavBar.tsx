@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Input,
   Image,
   Box,
   ButtonGroup,
@@ -21,8 +20,6 @@ import {
   useMediaQuery,
   MenuDivider,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon, SearchIcon, AddIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
 import {
   MoonIcon,
   SunIcon,
@@ -31,14 +28,10 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
-
-import ModalSearchBar from "./ModalSearchBar";
 import AddMovieModel from "./Home/AddMovieModel";
-
 import { useToast } from "../context/toast";
 import MobileNav from "./MobileNav";
 import SearchBar from "./SearchBar";
-
 const NavBar = ({
   token,
   userUsername,
@@ -52,20 +45,10 @@ const NavBar = ({
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [showHeaderShadow, setShowHeaderShadow] = useState<boolean>(false);
-  const [isSmallScreen] = useMediaQuery("(max-width: 800px)");
   const [isSmallScreen] = useMediaQuery("(max-width: 900px)");
-
   const toast = useToast();
-
   const navigate = useNavigate();
-
   const { colorMode, toggleColorMode } = useColorMode();
-  const {
-    isOpen: isSearchOpen,
-    onOpen: openSearch,
-    onClose: closeSearch,
-  } = useDisclosure();
-
   const {
     isOpen: isAddMovieOpen,
     onOpen: openAddMovie,
@@ -76,9 +59,7 @@ const NavBar = ({
     onOpen: openMobileNav,
     onClose: closeMobileNav,
   } = useDisclosure();
-
   const isLogged: boolean = token && userUsername ? true : false;
-
   window.addEventListener("scroll", () => {
     if (window.scrollY < 100) {
       setShowHeaderShadow(false);
@@ -92,12 +73,10 @@ const NavBar = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement> | any) => {
     event.preventDefault();
     if (!searchValue) return alert("search bar should not be empty");
-
     alert(searchValue);
     setSearchValue("");
     isMobileNavOpen && closeMobileNav();
   };
-
   const logout = () => {
     setUserUsername("");
     setToken("");
@@ -128,41 +107,12 @@ const NavBar = ({
         px="2rem"
         py="1rem"
       >
-
         <HStack flex="1 auto" onClick={() => navigate("/")}>
           <Image src="/favicon-32x32.png" alt="welp" />
           <Heading as="h1" size="lg">
             TMovies
           </Heading>
         </HStack>
-
-        <Flex flex="1 auto" justify="right">
-          {isLogged ? (
-            <Menu>
-              <MenuButton>
-                <Avatar name={userUsername!} size="md" />
-              </MenuButton>
-              <MenuList>
-                <MenuGroup title="Profile">
-                  <MenuItem>My Account</MenuItem>
-                  <MenuItem>My Movies</MenuItem>
-                  <MenuDivider />
-                  <MenuItem onClick={logout}>Logout</MenuItem>
-                </MenuGroup>
-              </MenuList>
-            </Menu>
-          ) : (
-            <ButtonGroup>
-              <Link to="/auth/login">
-                <Button variant="ghost">Login</Button>
-              </Link>
-
-              <Link to="/auth/register">
-                <Button colorScheme="linkedin">Register</Button>
-              </Link>
-            </ButtonGroup>
-          )}
-        </Flex>
         {isSmallScreen ? (
           <IconButton
             aria-label="toggle mobile navigation"
@@ -197,9 +147,49 @@ const NavBar = ({
                 </IconButton>
               ) : null}
             </HStack>
+            <Flex flex="1 auto" justify="right">
+              {isLogged ? (
+                <Menu>
+                  <MenuButton>
+                    <Avatar name={userUsername!} size="md" />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuGroup title="Profile">
+                      <MenuItem>My Account</MenuItem>
+                      <MenuItem>My Movies</MenuItem>
+                      <MenuDivider />
+                      <MenuItem onClick={logout}>Logout</MenuItem>
+                    </MenuGroup>
+                  </MenuList>
+                </Menu>
+              ) : (
+                <ButtonGroup isAttached>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/auth/login")}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    colorScheme="linkedin"
+                    onClick={() => navigate("/auth/register")}
+                  >
+                    Register
+                  </Button>
+                </ButtonGroup>
+              )}
+            </Flex>
+          </>
+        )}
+      </Flex>
 
-     
-      <AddMovieModel isOpen={isAddMovieOpen} onClose={closeAddMovie} />
+      {token ? (
+        <AddMovieModel
+          isOpen={isAddMovieOpen}
+          onClose={closeAddMovie}
+          token={token}
+        />
+      ) : null}
       <MobileNav
         isOpen={isMobileNavOpen}
         onClose={closeMobileNav}
