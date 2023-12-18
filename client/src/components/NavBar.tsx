@@ -14,11 +14,9 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuGroup,
   Tooltip,
   useDisclosure,
   useMediaQuery,
-  MenuDivider,
 } from "@chakra-ui/react";
 import {
   MoonIcon,
@@ -27,6 +25,8 @@ import {
   AddIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
+
+
 import { useNavigate } from "react-router-dom";
 import AddMovieModel from "./Home/AddMovieModel";
 import { useToast } from "../context/toast";
@@ -154,12 +154,7 @@ const NavBar = ({
                     <Avatar name={userUsername!} size="md" />
                   </MenuButton>
                   <MenuList>
-                    <MenuGroup title="Profile">
-                      <MenuItem>My Account</MenuItem>
-                      <MenuItem>My Movies</MenuItem>
-                      <MenuDivider />
-                      <MenuItem onClick={logout}>Logout</MenuItem>
-                    </MenuGroup>
+                    <MenuItem onClick={logout}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
               ) : (
@@ -182,7 +177,6 @@ const NavBar = ({
           </>
         )}
       </Flex>
-
       {token ? (
         <AddMovieModel
           isOpen={isAddMovieOpen}
