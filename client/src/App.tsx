@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import NavBar from "./components/NavBar";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+const NavBar = lazy(() => import("./components/NavBar"));
+const Home = lazy(() => import("./pages/Home/Home"));
+const Login = lazy(() => import("./pages/Login/Login"));
+const Register = lazy(() => import("./pages/Register/Register"));
+
+import useLocalStorage from "./hooks/useLocalStorage";
+
+import { toastContext } from "./context/toast";
+const App = () => {
+  const [token, setToken] = useLocalStorage<string | null>("token", null);
+  const [userUsername, setUserUsername] = useLocalStorage<string | null>(
+    "username",
+    null
+  );
+  const toast = useToast();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+    <toastContext.Provider value={toast}>
+      <NavBar
+        token={token}
+        userUsername={userUsername}
+        setToken={setToken}
+        setUserUsername={setUserUsername}
+      />
+      <Suspense>
+        <NavBar
+          token={token}
+          userUsername={userUsername}
+          setToken={setToken}
+          setUserUsername={setUserUsername}
+        />
+      </Suspense>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route
+          index
+          element={
+            <Suspense>
+              <Home />
+            </Suspense>
+          }
+        />
+        <Route path=":genre" element={<Home />} />
+        <Route
+          path="auth/login"
+          element={
+            <Login setToken={setToken} setUserUsername={setUserUsername} />
+            <Suspense>
+              <Login setToken={setToken} setUserUsername={setUserUsername} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="auth/register"
+          element={
+            <Register setToken={setToken} setUserUsername={setUserUsername} />
+            <Suspense>
+              <Register setToken={setToken} setUserUsername={setUserUsername} />
+            </Suspense>
+          }
+        />
+      </Routes>
+    </toastContext.Provider>
+  );
+};
+export default App;
