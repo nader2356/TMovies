@@ -1,5 +1,4 @@
 
-import { useEffect } from "react";
 import {
   Spinner,
   Text,
@@ -12,11 +11,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import MovieCard from "./MovieCard";
-
 import { getAllMovies } from "../../api/movies";
 import { AnimatePresence, motion } from "framer-motion";
-
-
 const Movies = () => {
   const genre = useParams().genre;
   const {
@@ -25,18 +21,15 @@ const Movies = () => {
     isLoading,
     isRefetching,
     isError,
-    refetch,
   } = useQuery({
-    queryKey: ["movies"],
+    queryKey: ["movies", genre],
     queryFn: () => getAllMovies(genre),
+    refetchOnWindowFocus: false,
   });
-  useEffect(() => {
-    refetch();
-  }, [genre]);
+
 
   return (
     <Box mb="2rem" maxW="90rem" mx="auto" px="2rem">
-    
       <Flex justify="space-between" align="center">
         <Heading as="h2" size="lg">
           Movies

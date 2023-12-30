@@ -70,6 +70,7 @@ const NavBar = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (event: React.FormEvent<HTMLFormElement> | any) => {
     event.preventDefault();
     if (!searchValue) return alert("search bar should not be empty");
@@ -192,6 +193,8 @@ const NavBar = ({
         onSubmit={handleSubmit}
         userUsername={userUsername}
         logout={logout}
+        isLogged={isLogged}
+        openAddMovie={openAddMovie}
       />
     </Box>
   );

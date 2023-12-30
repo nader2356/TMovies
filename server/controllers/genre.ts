@@ -6,9 +6,6 @@ genreRouter.get("/", async (request: Request, response: Response) => {
   try {
     
     const genres = await Genre.find({});
-
-    if (genres.length === 0)
-      return response.status(400).json({ error: "no genres found" });
     response.json(genres);
   } catch (err: any) {
     response.status(400).json({ error: err.message });

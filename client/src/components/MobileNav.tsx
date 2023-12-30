@@ -1,4 +1,4 @@
-import { CloseIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Drawer,
   DrawerOverlay,
@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
-
 const MobileNav = ({
   isOpen,
   onClose,
@@ -24,6 +23,9 @@ const MobileNav = ({
   onSubmit,
   userUsername,
   logout,
+  isLogged,
+  openAddMovie,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {
   const navigate = useNavigate();
 
@@ -58,6 +60,17 @@ const MobileNav = ({
                   Search
                 </Button>
               </Center>
+              {isLogged ? (
+                <Center mt="10rem" onClick={onClose}>
+                  <Button
+                    leftIcon={<AddIcon />}
+                    aria-label="add a movie"
+                    onClick={openAddMovie}
+                  >
+                    Add a movie
+                  </Button>
+                </Center>
+              ) : null}
             </form>
           </Stack>
         </DrawerBody>
@@ -89,5 +102,4 @@ const MobileNav = ({
     </Drawer>
   );
 };
-
 export default MobileNav;

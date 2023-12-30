@@ -27,11 +27,12 @@ import { useToast } from "../../context/toast";
 import { INewMovie } from "../../utils/interfaces";
 import { createMovie } from "../../api/movies";
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   isOpen: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClose: any;
   token: string;
 };
-
 interface IGenre {
   title: string;
   id: string;
@@ -42,8 +43,6 @@ const DEFAULT_NEWMOVIE: INewMovie = {
   poster: "",
   genres: [],
 };
-
-const AddMovieModel = ({ isOpen, onClose }: Props) => {
 const AddMovieModel = ({ isOpen, onClose, token }: Props) => {
   const [newMovie, setNewMovie] = useState<INewMovie>(DEFAULT_NEWMOVIE);
   const [isImgBroken, setIsImgBroken] = useBoolean(true);
@@ -77,6 +76,13 @@ const AddMovieModel = ({ isOpen, onClose, token }: Props) => {
       });
       onClose();
       setNewMovie(DEFAULT_NEWMOVIE);
+      setCheckedGenres((prev) => {
+        if (prev) {
+          return prev.map((item) => ({ ...item, checked: false }));
+        } else {
+          return prev;
+        }
+      });
       queryClient.invalidateQueries({ queryKey: ["movies"] });
     },
     onError: (err: any) => {
@@ -118,7 +124,6 @@ const AddMovieModel = ({ isOpen, onClose, token }: Props) => {
       mutate([{ ...newMovie, genres: genresIds }, token]);
     }
   };
-
   return (
     <Modal
       closeOnOverlayClick={false}
