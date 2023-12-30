@@ -6,6 +6,8 @@ import movieRouter from "./controllers/movie";
 import genreRouter from "./controllers/genre";
 import userRouter from "./controllers/user";
 import loginRouter from "./controllers/login";
+import searchRouter from "./controllers/search";
+
 
 import { unknownEndpoint } from "./utils/middleware";
 import testRouter from "./controllers/test";
@@ -24,9 +26,9 @@ app.use("/api/movies", movieRouter);
 app.use("/api/genres", genreRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/search", searchRouter);
 
 app.use("/api/test", testRouter);
 
 app.use("*", unknownEndpoint);
-
 export default app;
