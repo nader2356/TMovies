@@ -1,23 +1,31 @@
 require("dotenv").config();
 import express, { Request, Response } from "express";
-import jwt  from "jsonwebtoken";
+
+import jwt from "jsonwebtoken";
+import Genre from "../models/Genre";
 
 import Movie from "../models/Movie";
 import User from "../models/User";
-
 const movieRouter = express.Router();
 
 movieRouter.get("/", async (request: Request, response: Response) => {
   try {
 
-    const movies = await Movie.find({})
+    const { genre } = request.query;
+
+    const returnedGenre = await Genre.findOne({ title: genre }, "_id");
+    const genreId = returnedGenre?._id.toString();
+
+    const option = genreId ? { genres: { $in: genreId } } : {};
+
+    const movies = await Movie.find(option)
       .sort({ createdAt: -1 })
-      .populate("genres", "title")
-      .populate("postedBy", "username");
+      .populate("genres", "title");
 
     if (movies.length === 0) return response.json({ error: "no movies found" });
 
-    response.json(movies);
+ 
+    response.json(movies.slice(0));
   } catch (err: any) {
     response.status(400).json({ error: err.message });
   }
@@ -25,42 +33,35 @@ movieRouter.get("/", async (request: Request, response: Response) => {
 movieRouter.get("/:id", async (request: Request, response: Response) => {
   try {
     const { id } = request.params;
-
-
-
     const movie = await Movie.findById(id)
       .populate("genres", "title")
       .populate("postedBy", "username");
-
     response.json(movie);
   } catch (err: any) {
     response.status(400).json({ error: err.message });
   }
 });
+
 movieRouter.post("/", async (request: Request, response: Response) => {
   try {
-    const { title, poster, genres } = request.body;
 
+    const {
+      title,
+      poster,
+      genres,
+    }: { title: string; poster: string; genres: string[] } = request.body;
 
     const authorization = request.get("authorization");
 
     const SECRET = process.env.SECRET;
-
     if (!(authorization && authorization.toLowerCase().startsWith("bearer ")))
       return response.status(400).json({ error: "no token was provided" });
-
     const token = authorization?.substring(7);
-
     const decodedToken: any = jwt.verify(token, SECRET!);
-
     const { id } = decodedToken;
-
     if (!id) return response.status(401).json({ error: "invalid token" });
-
     const user = await User.findById(id);
-
     if (!user) return response.status(400).json({ error: "no user found" });
-
     if (!title || !poster)
       return response
         .status(400)
@@ -71,7 +72,6 @@ movieRouter.post("/", async (request: Request, response: Response) => {
       genres: genres?.length > 0 ? genres : [],
       postedBy: user._id,
     });
-
     const newMovie = await movie.save();
     response.json(newMovie);
   } catch (err: any) {
