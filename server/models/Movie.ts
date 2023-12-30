@@ -1,5 +1,14 @@
-import mongoose from "mongoose";
-const movieSchema = new mongoose.Schema(
+
+import mongoose, { Schema } from "mongoose";
+
+interface IMovie {
+  title: string;
+  poster: string;
+  genres: Schema.Types.ObjectId[];
+  postedBy: Schema.Types.ObjectId;
+}
+
+const movieSchema = new mongoose.Schema<IMovie>(
   {
     title: {
       type: String,
@@ -29,4 +38,7 @@ movieSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
-export default mongoose.model("Movie", movieSchema);
+
+
+
+export default mongoose.model<IMovie>("Movie", movieSchema);

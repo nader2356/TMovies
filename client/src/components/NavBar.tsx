@@ -25,8 +25,6 @@ import {
   AddIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
-
-
 import { useNavigate } from "react-router-dom";
 import AddMovieModel from "./Home/AddMovieModel";
 import { useToast } from "../context/toast";
@@ -40,7 +38,9 @@ const NavBar = ({
 }: {
   token: string | null;
   userUsername: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setToken: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUserUsername: any;
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
