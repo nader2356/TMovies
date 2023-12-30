@@ -55,7 +55,7 @@ const MobileNav = ({
                     borderTopLeftRadius: "0",
                     borderBottomLeftRadius: "0",
                   }}
-                  disabled
+                
                 >
                   Search
                 </Button>

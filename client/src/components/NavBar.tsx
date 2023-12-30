@@ -30,6 +30,7 @@ import AddMovieModel from "./Home/AddMovieModel";
 import { useToast } from "../context/toast";
 import MobileNav from "./MobileNav";
 import SearchBar from "./SearchBar";
+
 const NavBar = ({
   token,
   userUsername,
@@ -73,8 +74,8 @@ const NavBar = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (event: React.FormEvent<HTMLFormElement> | any) => {
     event.preventDefault();
-    if (!searchValue) return alert("search bar should not be empty");
-    alert(searchValue);
+
+   
     setSearchValue("");
     isMobileNavOpen && closeMobileNav();
   };

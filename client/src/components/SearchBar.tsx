@@ -10,7 +10,7 @@ const SearchBar = ({ value, onChange, width, isAttached }: any) => {
       placeholder="Search for a movie"
       value={value}
       onChange={onChange}
-      disabled
+   
     />
   );
 };

@@ -1,15 +1,12 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-
-import NavBar from "./components/NavBar";
-import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
 const NavBar = lazy(() => import("./components/NavBar"));
 const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Login/Login"));
 const Register = lazy(() => import("./pages/Register/Register"));
+
+import FullPageSpinner from "./components/FullPageSpinner";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 
@@ -21,15 +18,8 @@ const App = () => {
     null
   );
   const toast = useToast();
-
   return (
     <toastContext.Provider value={toast}>
-      <NavBar
-        token={token}
-        userUsername={userUsername}
-        setToken={setToken}
-        setUserUsername={setUserUsername}
-      />
       <Suspense>
         <NavBar
           token={token}
@@ -39,7 +29,6 @@ const App = () => {
         />
       </Suspense>
       <Routes>
-        <Route index element={<Home />} />
         <Route
           index
           element={
@@ -49,11 +38,12 @@ const App = () => {
           }
         />
         <Route path=":genre" element={<Home />} />
+        <Route path="search/:q" element={<Home />} />
         <Route
           path="auth/login"
           element={
-            <Login setToken={setToken} setUserUsername={setUserUsername} />
             <Suspense>
+            <Suspense fallback={<FullPageSpinner />}>
               <Login setToken={setToken} setUserUsername={setUserUsername} />
             </Suspense>
           }
@@ -61,8 +51,8 @@ const App = () => {
         <Route
           path="auth/register"
           element={
-            <Register setToken={setToken} setUserUsername={setUserUsername} />
             <Suspense>
+            <Suspense fallback={<FullPageSpinner />}>
               <Register setToken={setToken} setUserUsername={setUserUsername} />
             </Suspense>
           }

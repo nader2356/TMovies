@@ -5,10 +5,7 @@ import { getAllGenres } from "../../api/genres";
 import { motion } from "framer-motion";
 const Genres = () => {
   const navigate = useNavigate();
-
-
   const genreParam = useParams().genre ?? "";
-
   const {
     data: genres,
     isError,
@@ -23,7 +20,6 @@ const Genres = () => {
     staleTime: Infinity,
     cacheTime: Infinity,
   });
-
   const Underline = (
     <Box
       as={motion.div}
@@ -31,7 +27,6 @@ const Genres = () => {
       h=".1rem"
       w="70%"
       mx="auto"
-      bg="white"
       bg="black"
       _dark={{ bg: "white" }}
     />
@@ -39,7 +34,8 @@ const Genres = () => {
 
   return (
     <>
-      <Flex maxW="90rem" mx="auto" pt="5rem" pb=".5rem">
+ 
+      <Flex maxW="90rem" mx="auto" pb=".5rem">
         {isLoading ? (
           <Box py="1rem" mx="auto">
             <Spinner size="md" />

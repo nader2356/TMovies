@@ -1,4 +1,3 @@
-
 import {
   Spinner,
   Text,
@@ -11,10 +10,19 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import MovieCard from "./MovieCard";
+
 import { getAllMovies } from "../../api/movies";
 import { AnimatePresence, motion } from "framer-motion";
-const Movies = () => {
+import { searchMovies } from "../../api/search";
+
+
+type Props = {
+  searchQuery: string | undefined;
+};
+
+const Movies = ({ searchQuery }: Props) => {
   const genre = useParams().genre;
+
   const {
     data: movies,
     isSuccess,
@@ -22,17 +30,20 @@ const Movies = () => {
     isRefetching,
     isError,
   } = useQuery({
-    queryKey: ["movies", genre],
-    queryFn: () => getAllMovies(genre),
+    queryKey: ["movies", genre, searchQuery],
+    queryFn: () => {
+      if (!searchQuery) return getAllMovies(genre);
+
+      return searchMovies(searchQuery);
+    },
     refetchOnWindowFocus: false,
   });
-
 
   return (
     <Box mb="2rem" maxW="90rem" mx="auto" px="2rem">
       <Flex justify="space-between" align="center">
         <Heading as="h2" size="lg">
-          Movies
+          {searchQuery ? searchQuery : "Movies"}
         </Heading>
         {isRefetching ? <Spinner size="sm" /> : null}
       </Flex>
