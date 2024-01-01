@@ -12,9 +12,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "../../context/toast";
+
 import { createUser } from "../../api/users";
+
 interface ICreds {
   username: string;
   password: string;
@@ -23,11 +27,11 @@ const DefaultCreds = {
   username: "",
   password: "",
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Register = ({ setToken, setUserUsername }: any) => {
   const [creds, setCreds] = useState<ICreds>(DefaultCreds);
   const navigate = useNavigate();
   const toast = useToast();
-
   const { mutate, isLoading } = useMutation({
     mutationFn: createUser,
     onSuccess: () => {
@@ -44,6 +48,7 @@ const Register = ({ setToken, setUserUsername }: any) => {
       navigate("/auth/login");
       setCreds(DefaultCreds);
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => {
       const toastConfig = {
         title: "Something Wrong",
@@ -70,8 +75,15 @@ const Register = ({ setToken, setUserUsername }: any) => {
     const value = event.target.value;
     setCreds((prev) => ({ ...prev, [name]: value }));
   };
+
   return (
-    <Center minH="100vh">
+  
+    <Center
+      as={motion.div}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      minH="100vh"
+    >
       <form onSubmit={handleSubmit}>
         <Box px="1rem" py="1.5rem" w="23rem">
           <Stack spacing="1rem">
