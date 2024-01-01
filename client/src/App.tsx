@@ -1,15 +1,13 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+
 const NavBar = lazy(() => import("./components/NavBar"));
 const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Login/Login"));
 const Register = lazy(() => import("./pages/Register/Register"));
-
 import FullPageSpinner from "./components/FullPageSpinner";
-
 import useLocalStorage from "./hooks/useLocalStorage";
-
 import { toastContext } from "./context/toast";
 const App = () => {
   const [token, setToken] = useLocalStorage<string | null>("token", null);
@@ -18,6 +16,12 @@ const App = () => {
     null
   );
   const toast = useToast();
+
+  useEffect(() => {
+    const preloadingDiv = document.getElementById("preloading");
+    preloadingDiv?.remove();
+  }, []);
+
   return (
     <toastContext.Provider value={toast}>
       <Suspense>
@@ -42,7 +46,6 @@ const App = () => {
         <Route
           path="auth/login"
           element={
-            <Suspense>
             <Suspense fallback={<FullPageSpinner />}>
               <Login setToken={setToken} setUserUsername={setUserUsername} />
             </Suspense>
@@ -51,7 +54,6 @@ const App = () => {
         <Route
           path="auth/register"
           element={
-            <Suspense>
             <Suspense fallback={<FullPageSpinner />}>
               <Register setToken={setToken} setUserUsername={setUserUsername} />
             </Suspense>
